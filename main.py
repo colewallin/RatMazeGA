@@ -4,14 +4,14 @@ import time
 from Agent.rat import *
 from Maze.maze import *
 
-POPULATION_SIZE = 1
-LIFE_SPAN = 8
+POPULATION_SIZE = 5
+LIFE_SPAN = 20
 
 def crossover(genes1, genes2):
-    cutpoint = random.randint(1,len(genes1))
-    newDNA = []
+    cutpoint = random.randint(0,LIFE_SPAN-1)
+    newDNA = [None] * LIFE_SPAN
 
-    for i in range(len(genes1)):
+    for i in range(0, LIFE_SPAN):
         if i < cutpoint:
             newDNA[i] = genes1[i]
         else:
@@ -19,71 +19,98 @@ def crossover(genes1, genes2):
 
     return newDNA
 
-def naturalSelection(matingPool, currentPopulation):
-    newPop = Population()
-    for rat in currentPopulation:
-        parentGenes1 = random.choice(matingPool).dna
-        parentGenes2 = random.choice(matingPool).dna
-        childGenes = crossover(parentGenes1, parentGenes2)
-        rat = Rat(childGenes)
 
 class Population:
 
     def __init__(self):
         self.pop = []
         self.matingPool = []
+        self.bestRat = Rat()
         for i in range(0, POPULATION_SIZE):
             self.pop.append(Rat())
 
     def evaluate(self):
-        mostFit = 0
+        mostFit = 0.0
         for rat in self.pop:
             rat.calculateFitness()
 
             # Find the rat with the highest fitness.
             if rat.fitness > mostFit:
                 mostFit = rat.fitness
+        print("mostFit: ", mostFit)
 
         # Normalize the fitness values between 0 and 1
         for rat in self.pop:
-            rat.fitness = rat.fitness / mostFit
+            print("Ratfitness preNormalize", rat.fitness)
+            rat.fitness = rat.fitness / float(mostFit)
+            print("Ratfitness Normalize", rat.fitness)
+            # // The most fit rat is obviously going to have a fitness score of
+            # one with this looop.
 
         for rat in self.pop:
-            amount = rat.fitness * 100
+            if rat.fitness > self.bestRat.fitness:
+                self.bestRat = rat
+
+
+        self.matingPool = []
+        for rat in self.pop:
+            amount = int(rat.fitness * 100)
             for i in range(amount):
                 self.matingPool.append(rat)
 
-        self.matingPool = []
+    def naturalSelection(self):
+        newPop = [None] * POPULATION_SIZE
+        for i in range(0, POPULATION_SIZE):
+            parentGenes1 = random.choice(self.matingPool).dna
+            parentGenes2 = random.choice(self.matingPool).dna
+            childGenes = crossover(parentGenes1, parentGenes2)
+            newPop[i] = Rat(childGenes)
+
+        self.pop = newPop
+        self.bestRat = Rat()
+
 
     def run(self, age):
         for rat in self.pop:
             rat.update(age)
-            rat.display()
+            # rat.display()
 
 def main():
 
     count = 0
-    print("This is the main")
-    # r = Rat(randomGeneticSequnce())
-    # r.display()
-    # print(randomGeneticSequnce())
-
-
-    # population = []
-    # for i in range(0, POPULATION_SIZE):
-    #     population.append(Rat())
 
     ratPop = Population()
 
 
-    for i in range(50):
-        time.sleep(.1)
+    for i in range(300):
+        # time.sleep(.1)
         ratPop.run(count)
         count += 1
         if count == LIFE_SPAN:
-            ratPop = Population()
+            # ratPop = Population()
+            ratPop.evaluate()
+            ratPop.bestRat.display()
+            ratPop.naturalSelection()
             count = 0
+
             print("The total lifespan has been reached. Starting a new population")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

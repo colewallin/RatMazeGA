@@ -2,8 +2,8 @@ import random
 
 # A simple representation of a Rat
 
-MAZE_SIZE = 10
-LIFE_SPAN = 8
+MAZE_SIZE = 50
+LIFE_SPAN = 20
 
 
 def randomGeneticSequnce():
@@ -25,9 +25,9 @@ class Rat:
             self.dna = randomGeneticSequnce()
         else:
             self.dna = dna
-            
+
         self.position = MAZE_SIZE/2
-        self.fitness = 0
+        self.fitness = 0.0
 
     def update(self, age):
         if self.dna[age]:
@@ -47,6 +47,7 @@ class Rat:
                 print(' = ', end='')
         print()
         self.printDNA()
+        print("Fitness Score of: ", self.fitness)
 
     def calculateFitness(self):
         distanceFromGoal = MAZE_SIZE - self.position

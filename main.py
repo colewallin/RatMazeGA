@@ -108,6 +108,7 @@ def main():
         ratPop.run(count)
         count += 1
         if count == LIFE_SPAN:
+            print("Generation ", generation)
             # ratPop = Population()
             ratPop.evaluate()
             ratPop.bestRat.display()
@@ -115,7 +116,7 @@ def main():
             count = 0
             generation += 1
             time.sleep(.1)
-            print("The total lifespan has been reached. Starting a new population")
+            print("Creating a new generation")
             print()
             print()
 
@@ -155,7 +156,6 @@ class Rat:
                 print(' = ', end='')
         print()
         self.printDNA()
-        print("Fitness Score of: ", self.fitness)
 
     def calculateFitness(self):
         distanceFromGoal = MAZE_SIZE - self.position
@@ -166,8 +166,6 @@ class Rat:
             self.fitness = 1/0.5
         else:
             self.fitness = 1/distanceFromGoal
-
-
 
     def getDNA(self):
         return self.dna

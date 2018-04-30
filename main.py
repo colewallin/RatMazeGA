@@ -118,7 +118,7 @@ def main():
     bestRatPerGen = []
     ratPop = Population()
     
-    filename = input('Save results as (enter filename): ')
+    filename = input("Save results into file (ex. 'stats.csv'): ")
     file_object = open(filename, 'w+')
     # writing done per most fit rat per generation.
     file_object.write("Current Generation,Rat Starting Position,Best DNA,Best Fitness Score,Best Reached Goal,% Pop Reached Goal,Population Size,Life Span,Max Generations,Maze Size\n")

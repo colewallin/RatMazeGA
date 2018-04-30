@@ -121,7 +121,7 @@ def main():
     filename = input('Save results as (enter filename): ')
     file_object = open(filename, 'w+')
     # writing done per most fit rat per generation.
-    file_object.write("Current Generation,Rat Starting Position,DNA,Fitness Score,Has Reached Goal,Population Size,Life Span,Max Generations,Maze Size\n")
+    file_object.write("Current Generation,Rat Starting Position,Best DNA,Best Fitness Score,Best Reached Goal,% Pop Reached Goal,Population Size,Life Span,Max Generations,Maze Size\n")
     
     while generation < MAX_GENERATIONS:
         ratPop.run(count) # run the population number of steps until lifespan of a rat, where lifespan is length of DNA sequence.
@@ -135,7 +135,15 @@ def main():
             ratPop.evaluate()
             ratPop.bestRat.display()
             bestRatPerGen.append(ratPop.bestRat)
-            file_object.write(str(generation + 1) + ',' + str(ratPop.bestRat.startingPosition) + ',' + dnaArrayToString(ratPop.bestRat.dna) + ',' + str(ratPop.bestRat.fitness) + ',' + str(ratPop.bestRat.ateTheCheese) + ',' + str(POPULATION_SIZE) + ',' + str(LIFE_SPAN) + ',' + str(MAX_GENERATIONS) + ',' + str(MAZE_SIZE)+ '\n')
+            
+            numRatsInPopThatAteCheese = 0
+            for rat in ratPop.pop:
+                if rat.ateTheCheese:
+                    numRatsInPopThatAteCheese+=1
+            percentPopAteCheese = (numRatsInPopThatAteCheese / len(ratPop.pop)) * 100
+
+            file_object.write(str(generation + 1) + ',' + str(ratPop.bestRat.startingPosition) + ',' + dnaArrayToString(ratPop.bestRat.dna) + ',' + str(ratPop.bestRat.fitness) + ',' + str(ratPop.bestRat.ateTheCheese) + ',' + str(percentPopAteCheese) + '%' + ',' + str(POPULATION_SIZE) + ',' + str(LIFE_SPAN) + ',' + str(MAX_GENERATIONS) + ',' + str(MAZE_SIZE)+ '\n')
+            
             ratPop.naturalSelection()
             count = 0
             generation += 1
@@ -144,6 +152,21 @@ def main():
                 print("Creating a new generation")
             print()
             print()
+    
+    file_object.write('\n')
+    gens_until_first_success = 1
+    cheese_eaten = False    
+    
+    for rat in bestRatPerGen:
+        if rat.ateTheCheese:
+            cheese_eaten = True
+            break
+        else:
+            gens_until_first_success+=1
+    if cheese_eaten:
+        file_object.write('First generation where best rat ate the cheese: ' + str(gens_until_first_success) + '\n')
+    else:
+        file_object.write('The cheese was never eaten by the best rat in any generation.\n')
     file_object.close()
 
 class Rat:

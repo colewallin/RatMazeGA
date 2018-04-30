@@ -4,9 +4,9 @@ import time
 # from Agent.rat import *
 # from Maze.maze import *
 
-POPULATION_SIZE = 50
+POPULATION_SIZE = 10
 LIFE_SPAN = 30
-MAX_GENERATIONS = 20
+MAX_GENERATIONS = 50
 MAZE_SIZE = 50
 
 def crossover(genes1, genes2):

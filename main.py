@@ -6,9 +6,9 @@ import time
 
 ### TODO: print average DNA, Average Starting Position, Average Fitness (factor in the weirdness regarding doubling successful rats having 200% fitness),
 
-POPULATION_SIZE = 50
+POPULATION_SIZE = 100
 LIFE_SPAN = 25
-MAX_GENERATIONS = 200
+MAX_GENERATIONS = 50
 MAZE_SIZE = 50
 
 
@@ -74,6 +74,7 @@ class Population:
             # Find the rat with the highest fitness.
             if rat.fitness > mostFit:
                 mostFit = rat.fitness
+
         print("mostFit: ", mostFit)
 
         # # Normalize the fitness values between 0 and 1
@@ -142,13 +143,13 @@ def main():
             ratPop.bestRat.display()
             bestRatPerGen.append(ratPop.bestRat)
 
-            numRatsInPopThatAteCheese = 0
-            for rat in ratPop.pop:
-                if rat.ateTheCheese:
-                    numRatsInPopThatAteCheese+=1
-            percentPopAteCheese = (numRatsInPopThatAteCheese / len(ratPop.pop)) * 100
-
-            file_object.write(str(generation + 1) + ',' + dnaArrayToString(ratPop.bestRat.dna) + ',' + str(ratPop.bestRat.fitness) + ',' + str(ratPop.bestRat.ateTheCheese) + ',' + str(percentPopAteCheese) + '%' + '\n')
+            # numRatsInPopThatAteCheese = 0
+            # for rat in ratPop.pop:
+            #     if rat.ateTheCheese:
+            #         numRatsInPopThatAteCheese+=1
+            # percentPopAteCheese = (numRatsInPopThatAteCheese / len(ratPop.pop)) * 100
+            #
+            # file_object.write(str(generation + 1) + ',' + dnaArrayToString(ratPop.bestRat.dna) + ',' + str(ratPop.bestRat.fitness) + ',' + str(ratPop.bestRat.ateTheCheese) + ',' + str(percentPopAteCheese) + '%' + '\n')
 
             ratPop.naturalSelection()
             count = 0
@@ -184,7 +185,7 @@ class Rat:
             self.dna = dna
 
         self.position = MAZE_SIZE/2
-        self.startingPosition = self.position
+        #self.startingPosition = self.position
         self.fitness = 0.0
         self.ateTheCheese = False
 
@@ -220,6 +221,12 @@ class Rat:
         if self.ateTheCheese:
             self.fitness = 1/0.5
         else:
+            if distanceFromGoal == 0:
+                print("distanceFromGoal WAS ZERO")
+                print("ate the chesse is: ", self.ateTheCheese)
+                print("The rats DNA is: ", self.dna, "and the fitness is: ", self.fitness)
+                self.display()
+                print("distanceFromGoal is:", distanceFromGoal)
             self.fitness = 1/distanceFromGoal
 
     def getDNA(self):
@@ -233,9 +240,13 @@ class Rat:
 
     def moveLeft(self):
         self.position -= 1
+        if self.position == MAZE_SIZE:
+            self.ateTheCheese = True
 
     def moveRight(self):
         self.position += 1
+        if self.position == MAZE_SIZE:
+            self.ateTheCheese = True
 
 
 

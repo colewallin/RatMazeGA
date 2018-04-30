@@ -7,7 +7,7 @@ import time
 ### TODO: print average DNA, Average Starting Position, Average Fitness (factor in the weirdness regarding doubling successful rats having 200% fitness),
 
 POPULATION_SIZE = 50
-LIFE_SPAN = 100
+LIFE_SPAN = 30
 MAX_GENERATIONS = 50
 MAZE_SIZE = 50
 

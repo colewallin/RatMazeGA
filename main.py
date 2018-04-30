@@ -4,10 +4,26 @@ import time
 # from Agent.rat import *
 # from Maze.maze import *
 
-POPULATION_SIZE = 10
+### TODO: print average DNA, Average Starting Position, Average Fitness (factor in the weirdness regarding doubling successful rats having 200% fitness),
+
+POPULATION_SIZE = 50
 LIFE_SPAN = 30
 MAX_GENERATIONS = 50
 MAZE_SIZE = 50
+
+
+def binaryToLR(num):
+    if num is 1:
+        return 'R'
+    elif num is 0:
+        return 'L'
+    else:
+        return 'E'
+
+def dnaArrayToString(dna):
+    consolidatedDNA = ''.join(map(binaryToLR, dna))
+    return consolidatedDNA
+
 
 def crossover(genes1, genes2):
     cutpoint = random.randint(0,LIFE_SPAN-1)
@@ -20,6 +36,7 @@ def crossover(genes1, genes2):
             newDNA[i] = genes2[i]
 
     return newDNA
+
 
 def mutate(genes):
     for i in range(LIFE_SPAN):
@@ -100,26 +117,63 @@ def main():
 
     count = 0
     generation =  0
+    bestRatPerGen = []
     ratPop = Population()
 
+    filename = input("Save results into file (ex. 'stats.csv'): ")
+    file_object = open(filename, 'w+')
+    # writing done per most fit rat per generation.
+
+    file_object.write("Population Size,Life Span,Max Generations,Maze Size\n")
+    file_object.write(str(POPULATION_SIZE) + ',' +  str(LIFE_SPAN) + ',' + str(MAX_GENERATIONS) + ',' + str(MAZE_SIZE) + '\n')
+    file_object.write('\n')
+    file_object.write("Current Generation,Best Rat's Starting Position,Best DNA,Best Fitness Score,Best Reached Goal,% Pop Reached Goal\n")
 
     while generation < MAX_GENERATIONS:
-
-        ratPop.run(count)
+        ratPop.run(count) # run the population number of steps until lifespan of a rat, where lifespan is length of DNA sequence.
         count += 1
+
+        # all rats in population have run until the end of their DNA sequence. evaluate the population, and display stats for best rat.
+        # following that, perform natural selection on population to create a new population/generation.
         if count == LIFE_SPAN:
-            print("Generation ", generation)
+            print("Generation ", generation+1)
             # ratPop = Population()
             ratPop.evaluate()
             ratPop.bestRat.display()
+            bestRatPerGen.append(ratPop.bestRat)
+
+            numRatsInPopThatAteCheese = 0
+            for rat in ratPop.pop:
+                if rat.ateTheCheese:
+                    numRatsInPopThatAteCheese+=1
+            percentPopAteCheese = (numRatsInPopThatAteCheese / len(ratPop.pop)) * 100
+
+            file_object.write(str(generation + 1) + ',' + str(ratPop.bestRat.startingPosition) + ',' + dnaArrayToString(ratPop.bestRat.dna) + ',' + str(ratPop.bestRat.fitness) + ',' + str(ratPop.bestRat.ateTheCheese) + ',' + str(percentPopAteCheese) + '%' + '\n')
+
             ratPop.naturalSelection()
             count = 0
             generation += 1
             time.sleep(.1)
-            print("Creating a new generation")
+            if generation is not MAX_GENERATIONS:
+                print("Creating a new generation")
             print()
             print()
 
+    file_object.write('\n')
+    gens_until_first_success = 1
+    cheese_eaten = False
+
+    for rat in bestRatPerGen:
+        if rat.ateTheCheese:
+            cheese_eaten = True
+            break
+        else:
+            gens_until_first_success+=1
+    if cheese_eaten:
+        file_object.write('First generation where best rat ate the cheese: ' + str(gens_until_first_success) + '\n')
+    else:
+        file_object.write('The cheese was never eaten by the best rat in any generation.\n')
+    file_object.close()
 
 class Rat:
 
@@ -130,6 +184,7 @@ class Rat:
             self.dna = dna
 
         self.position = MAZE_SIZE/2
+        self.startingPosition = self.position
         self.fitness = 0.0
         self.ateTheCheese = False
 

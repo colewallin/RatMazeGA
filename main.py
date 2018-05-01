@@ -12,7 +12,7 @@ import time
 # base maze size = 30
 
 POPULATION_SIZE = 50
-LIFE_SPAN = 60
+LIFE_SPAN = 25
 MAX_GENERATIONS = 200
 MAZE_SIZE = 30
 

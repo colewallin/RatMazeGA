@@ -69,7 +69,7 @@ class Population:
     def evaluate(self):
         mostFit = 0.0
         for rat in self.pop:
-            rat.calculateFitnessExpo()
+            rat.calculateFitnessLinear()
 
             # Find the rat with the highest fitness.
             if rat.fitness > mostFit:
@@ -244,7 +244,7 @@ class Rat:
 
     def calculateFitnessLinear(self):
         self.fitness = self.position / 10.0
-        print(self.fitness)
+        # print(self.fitness)
 
     def getDNA(self):
         return self.dna

@@ -122,16 +122,11 @@ def main():
 
     # filename = input("Save results into file (ex. 'stats.csv'): ")
     file_object = open("results.csv", 'w+')
-    # writing done per most fit rat per generation.
 
     file_object.write("Population Size,Life Span,Max Generations,Maze Size\n")
     file_object.write(str(POPULATION_SIZE) + ',' +  str(LIFE_SPAN) + ',' + str(MAX_GENERATIONS) + ',' + str(MAZE_SIZE) + '\n')
     file_object.write('\n')
-<<<<<<< HEAD
-    file_object.write("Current Generation,Best Rat's Starting Position,Best DNA,Best Fitness Score,Best Reached Goal,Average Fitness Score,% Pop Reached Goal\n")
-=======
-    file_object.write("Current Generation,Best DNA,Best Fitness Score,Best Reached Goal,% Pop Reached Goal\n")
->>>>>>> 7e161edfa142f8ec3e429653c5e999809a4da236
+    file_object.write("Current Generation,Best Rat's Starting Position,Best DNA,Best Fitness Score,Best Reached Goal,Average Fitness Score (No Winners),Average Fitness Score(Winner Inclusive),% Pop Reached Goal\n")
 
     while generation < MAX_GENERATIONS:
         ratPop.run(count) # run the population number of steps until lifespan of a rat, where lifespan is length of DNA sequence.
@@ -152,17 +147,27 @@ def main():
                     numRatsInPopThatAteCheese+=1
             percentPopAteCheese = (numRatsInPopThatAteCheese / len(ratPop.pop)) * 100
 
-<<<<<<< HEAD
             popFitness = 0
             for rat in ratPop.pop:
                 popFitness+=rat.fitness
             
             avgFitness = (popFitness / len(ratPop.pop))
 
-            file_object.write(str(generation + 1) + ',' + str(ratPop.bestRat.startingPosition) + ',' + dnaArrayToString(ratPop.bestRat.dna) + ',' + str(ratPop.bestRat.fitness) + ',' + str(ratPop.bestRat.ateTheCheese) + ',' + str(avgFitness) + ',' + str(percentPopAteCheese) + '%' + '\n')
-=======
-            file_object.write(str(generation + 1) + ',' + dnaArrayToString(ratPop.bestRat.dna) + ',' + str(ratPop.bestRat.fitness) + ',' + str(ratPop.bestRat.ateTheCheese) + ',' + str(percentPopAteCheese) + '%' + '\n')
->>>>>>> 7e161edfa142f8ec3e429653c5e999809a4da236
+            exclusivePopFitnessAccumulator = 0
+            numRatsInExclusivePop = 0
+            exclusiveAverageFitness = ''
+            allRatsSucceeded = True
+            for rat in ratPop.pop:
+                if rat.ateTheCheese is False:
+                    exclusivePopFitnessAccumulator+=rat.fitness
+                    numRatsInExclusivePop+=1
+                    allRatsSucceeded = False
+            if allRatsSucceeded is True:
+                exclusiveAverageFitness = 'N/A'
+            else:
+                exclusiveAverageFitness = str((exclusivePopFitnessAccumulator/numRatsInExclusivePop))
+
+            file_object.write(str(generation + 1) + ',' + str(ratPop.bestRat.startingPosition) + ',' + dnaArrayToString(ratPop.bestRat.dna) + ',' + str(ratPop.bestRat.fitness) + ',' + str(ratPop.bestRat.ateTheCheese) + ',' + str(exclusiveAverageFitness) + ',' + str(avgFitness) + ',' + str(percentPopAteCheese) + '%' + '\n')
 
             ratPop.naturalSelection()
             count = 0

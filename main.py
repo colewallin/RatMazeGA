@@ -10,6 +10,7 @@ import time
 # base lifespan 25
 # max gen always 200
 # base maze size = 30
+# base mutation rate is 1/25
 
 POPULATION_SIZE = 50
 LIFE_SPAN = 25

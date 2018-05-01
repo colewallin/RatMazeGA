@@ -6,6 +6,11 @@ import time
 
 ### TODO: print average DNA, Average Starting Position, Average Fitness (factor in the weirdness regarding doubling successful rats having 200% fitness),
 
+# base pop 50
+# base lifespan 25
+# max gen always 200
+# base maze size = 30
+
 POPULATION_SIZE = 50
 LIFE_SPAN = 60
 MAX_GENERATIONS = 200
@@ -204,7 +209,7 @@ class Rat:
         else:
             self.dna = dna
 
-        self.position = MAZE_SIZE/2
+        self.position = int(MAZE_SIZE/2)
         self.startingPosition = self.position
         self.fitness = 0.0
         self.ateTheCheese = False

@@ -121,8 +121,8 @@ def main():
     bestRatPerGen = []
     ratPop = Population()
 
-    # filename = input("Save results into file (ex. 'stats.csv'): ")
-    file_object = open("results.csv", 'w+')
+    filename = input("Save results into file:")
+    file_object = open(filename, 'w+')
 
     file_object.write("Population Size,Life Span,Max Generations,Maze Size\n")
     file_object.write(str(POPULATION_SIZE) + ',' +  str(LIFE_SPAN) + ',' + str(MAX_GENERATIONS) + ',' + str(MAZE_SIZE) + '\n')

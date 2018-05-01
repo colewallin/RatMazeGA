@@ -7,7 +7,7 @@ import time
 ### TODO: print average DNA, Average Starting Position, Average Fitness (factor in the weirdness regarding doubling successful rats having 200% fitness),
 
 POPULATION_SIZE = 50
-LIFE_SPAN = 25
+LIFE_SPAN = 60
 MAX_GENERATIONS = 200
 MAZE_SIZE = 30
 
@@ -69,8 +69,8 @@ class Population:
     def evaluate(self):
         mostFit = 0.0
         for rat in self.pop:
-            rat.calculateFitnessLinear()
-            # rat.calculateFitnessExpo()
+            # rat.calculateFitnessLinear()
+            rat.calculateFitnessExpo()
 
             # Find the rat with the highest fitness.
             if rat.fitness > mostFit:

@@ -1,0 +1,4 @@
+Everything in a population has a chance to get mutated
+
+
+This is an optimixation problem and thus generation is more important than time.

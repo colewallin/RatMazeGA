@@ -1,6 +1,7 @@
 import importlib
 import random
 import time
+import math
 # from Agent.rat import *
 # from Maze.maze import *
 
@@ -47,7 +48,7 @@ def crossover(genes1, genes2):
 def mutate(genes):
     for i in range(LIFE_SPAN):
         # Approximately one gene will get mutate per genetic sequence
-        if random.randint(1, LIFE_SPAN) == 1:
+        if random.randint(1, math.floor(LIFE_SPAN/5)) == 1:
             genes[i] = random.randint(0, 1)
 
 
@@ -214,13 +215,14 @@ class Rat:
         self.startingPosition = self.position
         self.fitness = 0.0
         self.ateTheCheese = False
+        self.fellInTheHole = False
 
     def update(self, age):
         if self.position == MAZE_SIZE:
             self.ateTheCheese = True
 
         # Don't keep moving the rat if it has reached the cheese
-        if not self.ateTheCheese:
+        if not self.ateTheCheese and not self.fellInTheHole:
             if self.dna[age]:
                 self.moveRight()
             else:
@@ -246,6 +248,8 @@ class Rat:
         # If you got the cheese, double the top fitness (1/1)
         if self.ateTheCheese:
             self.fitness = 1/0.5
+        elif self.fellInTheHole:
+            self.fitness = 1/(distanceFromGoal*2)
         else:
             self.fitness = 1/distanceFromGoal
 
@@ -266,11 +270,16 @@ class Rat:
         self.position -= 1
         if self.position == MAZE_SIZE:
             self.ateTheCheese = True
+        if self.position == 1:
+            print("A rat fell in the hole.")
+            self.fellInTheHole = True
 
     def moveRight(self):
         self.position += 1
         if self.position == MAZE_SIZE:
             self.ateTheCheese = True
+        if self.position == 1:
+            self.fellInTheHole = True
 
 
 

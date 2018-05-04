@@ -48,7 +48,7 @@ def crossover(genes1, genes2):
 def mutate(genes):
     for i in range(LIFE_SPAN):
         # Approximately one gene will get mutate per genetic sequence
-        if random.randint(1, math.floor(LIFE_SPAN/5)) == 1:
+        if random.randint(1, math.floor(LIFE_SPAN)) == 1:
             genes[i] = random.randint(0, 1)
 
 
@@ -96,6 +96,7 @@ class Population:
         for rat in self.pop:
             if rat.fitness > self.bestRat.fitness:
                 self.bestRat = rat
+
 
 
         self.matingPool = []
